@@ -2,17 +2,25 @@
 #include <stdlib.h>
 #include <string.h>
 
-void swap(long *a, long *b) {
-    int t = *a;
-    *a = *b;
-    *b = t;
+void swap(int*y1, int*m1, int*d1, int*y2, int*m2, int*d2) {
+    int t=*y1; *y1=*y2; *y2=t;
+    t=*m1; *m1=*m2; *m2=t;
+    t=*d1; *d1=*d2; *d2=t;
+}
+int comp(int y1, int m1, int d1, int y2, int m2, int d2) {
+    if(y1>y2) return 1;
+    if(y1<y2) return 0;
+    if(m1>m2) return 1;
+    if(m1<m2) return 0;
+    if(d1>d2) return 1;
+    return 0;
 }
 
-void bubbleSort(long* a, int n){
+void bubbleSort(int* y, int* m, int* d, int n){
     for(int i=n-1; i>0; i--){
         for(int j=0; j<i; j++){
-            if(a[j]>a[j+1]){
-                swap(&a[j], &a[j+1]);
+            if(comp(y[j],m[j],d[j],y[j+1],m[j+1],d[j+1])){
+                swap(&y[j],&m[j],&d[j],&y[j+1],&m[j+1],&d[j+1]);
             }
         }
     }
@@ -46,28 +54,27 @@ int main(){
 
         FILE *fp;
         fp = fopen(cfile, "r");
-        long* b = (long *)malloc(n*sizeof(long));
+        int *y = (int*)malloc(n*sizeof(int));
+        int *m = (int*)malloc(n*sizeof(int));
+        int *d = (int*)malloc(n*sizeof(int));
         char junk,juk,c1,c2,c3;
         for(int i=0; i<n; i++){
-            long day, mon, year;
-            fscanf(fp, "%d%c%c%c%c%c%d", &day, &junk, &c1, &c2, &c3, &juk, &year);
-            mon = monthIndex(c1,c2,c3);
-            b[i] = year*10000 + mon*100 + day;
+            fscanf(fp, "%d%c%c%c%c%c%d", &d[i], &junk, &c1, &c2, &c3, &juk, &y[i]);
+            m[i] = monthIndex(c1,c2,c3);
         }
         fclose(fp);
-        // printf("%d %d %d", d[0], m[0], y[0]);
 
-        bubbleSort(b, n);
+        bubbleSort(y, m, d, n);
 
-        // printf("%d %d %d", d[0], m[0], y[0]);
         FILE *fb;
         fb = fopen(bfile, "w");
         for(int i=0; i<n; i++){
-            int monind = (b[i]/100) % 100;
-            fprintf(fb, "%02d-%s-%d\n", b[i]%100, months[monind], b[i]/10000);
+            fprintf(fb, "%02d-%s-%d\n", d[i], months[m[i]], y[i]);
         }
         fclose(fb);
-        free(b);
+        free(y);
+        free(m);
+        free(d);
         m1*=2; n*=2;
     }
     return 0;
