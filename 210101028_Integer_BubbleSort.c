@@ -24,10 +24,20 @@ int main(){
     n=10000, m=10;
     char cfile[] = "i10k.txt";
     char bfile[] = "bi10k.txt";
+
+    FILE *fo;
+    fo = fopen("210101028-output.txt","a");
+    fprintf(fo,"--------------------------------------------------------------\n");
+    fprintf(fo,"                        Bubble Sort                            \n");
+    fprintf(fo,"--------------------------------------------------------------\n");
+    fprintf(fo,"Description        Only Sorting    Sorting & Writing to File  \n");
+    fprintf(fo,"--------------------------------------------------------------\n");
+    fclose(fo);
+
     for(int x=0; x<10; x++){
-        // double time_sort=0.0;
-        // double time_sortwrite=0.0;
-        // clock_t begin = clock();
+        double time_sort=0.0;
+        double time_sortwrite=0.0;
+
         sprintf(cfile, "i%dk.txt", m);
         sprintf(bfile, "bi%dk.txt", m);
 
@@ -40,10 +50,10 @@ int main(){
         }
         fclose(fc);
 
-        // clock_t begin1 = clock();
+        clock_t begin1 = clock();
         bubbleSort(b, n);
-        // clock_t end1 = clock();
 
+        clock_t begin2 = clock();
         FILE *fb;
         fb = fopen(bfile, "w");
         for(int i=0; i<n; i++){
@@ -51,12 +61,16 @@ int main(){
         }
         fclose(fb);
         free(b);
+
+        clock_t end = clock();
+        time_sort += (double)(end-begin2)/CLOCKS_PER_SEC;
+        time_sortwrite += (double)(end-begin1)/CLOCKS_PER_SEC;
+
+        FILE* fo;
+        fo = fopen("210101028-output.txt","a");
+        fprintf(fo, "Integers %dK \t\t %.3f \t\t %.3f \n", m, time_sort, time_sortwrite);
+        fclose(fo);
         m*=2; n*=2;
-        // clock_t end = clock();
-        // time_sort += (double)(end1-begin1)/CLOCKS_PER_SEC;
-        // time_sortwrite += (double)(end-begin)/CLOCKS_PER_SEC;
-        // printf("Time to only sort : %f seconds\n", time_sort);
-        // printf("Time to sort and write : %f seconds\n", time_sortwrite);
     }
     return 0;
 }

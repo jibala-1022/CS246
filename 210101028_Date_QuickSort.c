@@ -9,23 +9,37 @@ void swap(int*y1, int*m1, int*d1, int*y2, int*m2, int*d2) {
     t=*d1; *d1=*d2; *d2=t;
 }
 int comp(int y1, int m1, int d1, int y2, int m2, int d2) {
-    if(y1>y2) return 1;
+    if(y1>=y2) return 1;
     if(y1<y2) return 0;
-    if(m1>m2) return 1;
+    if(m1>=m2) return 1;
     if(m1<m2) return 0;
-    if(d1>d2) return 1;
+    if(d1>=d2) return 1;
     return 0;
 }
 
-void bubbleSort(int* y, int* m, int* d, int n){
-    for(int i=n-1; i>0; i--){
-        for(int j=0; j<i; j++){
-            if(comp(y[j],m[j],d[j],y[j+1],m[j+1],d[j+1])){
-                swap(&y[j],&m[j],&d[j],&y[j+1],&m[j+1],&d[j+1]);
-            }
+int partition(int*y, int*m, int*d, int low, int high) {
+    int py = y[high];
+    int pm = m[high];
+    int pd = d[high];
+    int i = (low - 1);
+    for (int j = low; j < high; j++) {
+        if (py,pm,pd,y[j],m[j],d[j]) {
+            i++;
+            swap(&py,&pm,&pd,&y[j],&m[j],&d[j]);
         }
     }
+    swap(&y[i+1],&m[i+1],&d[i+1],&y[high],&m[high],&d[high]);
+    return (i + 1);
 }
+
+void quickSort(int*y, int*m, int*d, int low, int high) {
+    if (low < high) {
+        int pi = partition(y,m,d, low, high);
+        quickSort(y,m,d, low, pi - 1);
+        quickSort(y,m,d, pi + 1, high);
+    }
+}
+
 
 int monthIndex(char c1, char c2, char c3){
     if(c1=='J' && c2=='a' && c3=='n') return 0;
@@ -48,13 +62,13 @@ int main(){
     n=10000, m1=10;
     char months[12][4] = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
     char cfile[] = "d10k.txt";
-    char bfile[] = "bd10k.txt";
+    char bfile[] = "qd10k.txt";
 
     for(int x=0; x<10; x++){
         double time_sort=0.0;
         double time_sortwrite=0.0;
         sprintf(cfile, "d%dk.txt", m1);
-        sprintf(bfile, "bd%dk.txt", m1);
+        sprintf(bfile, "qd%dk.txt", m1);
 
         FILE *fp;
         fp = fopen(cfile, "r");
@@ -69,15 +83,15 @@ int main(){
         fclose(fp);
 
         clock_t begin1 = clock();
-        bubbleSort(y, m, d, n);
+        quickSort(y, m, d, 0, n-1);
 
         clock_t begin2 = clock();
-        FILE *fb;
-        fb = fopen(bfile, "w");
+        FILE *fq;
+        fq = fopen(bfile, "w");
         for(int i=0; i<n; i++){
-            fprintf(fb, "%02d-%s-%d\n", d[i], months[m[i]], y[i]);
+            fprintf(fq, "%02d-%s-%d\n", d[i], months[m[i]], y[i]);
         }
-        fclose(fb);
+        fclose(fq);
         free(y);
         free(m);
         free(d);
