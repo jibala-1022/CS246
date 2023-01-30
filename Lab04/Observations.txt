@@ -1,0 +1,27 @@
+Task 3
+ERROR 1062 (23000): Duplicate entry 'History of Contemporary India' for key 'hss_table02.PRIMARY'
+That is cname was primary so duplicate values threw error,
+
+Task 4
+NO ERROR
+Since the primary key tuple (roll_number, cid) will be unique for a record, there are no duplicates.
+
+Task 5
+ERROR 1068 (42000): Multiple primary key defined
+Primary key set is a tuple that uniquely defines a record. But initializing different keys can cause primary keys to be unique but still tuples to be duplicates.
+For eg: in future a new record with sno = 1441 and roll_number = 170101001 will be considered duplicate since roll_number is duplicated. But as a tuple, this record is unique.
+To avoid this, primary keys are stored in tuples.
+Hence the table is not created.
+
+Task 6
+ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`week04`.`hss_table05`, CONSTRAINT `hss_table05_ibfk_1` FOREIGN KEY (`cid`) REFERENCES `hss_course01` (`cid`))
+There is a value in the referencing table (hss_table05) that does not exist in the referenced table (hss_course01).
+For eg: In the last record of hss_table05 cname - 'Introduction to Archaeology' but it does not exist in hss_course01.
+
+Task 7
+ERROR 1822 (HY000): Failed to add the foreign key constraint. Missing index for constraint 'hss_table06_ibfk_1' in the referenced table 'hss_course02'
+The foreign key (cid) in the referencing table (hss_table06) doesnot match the primary key (roll_number) in the referenced table (hss_course02).
+
+Task 8
+ERROR 1822 (HY000): Failed to add the foreign key constraint. Missing index for constraint 'hss_table07_ibfk_1' in the referenced table 'hss_course03'
+The referenced table (hss_course03) doesnot contain a primary key.
